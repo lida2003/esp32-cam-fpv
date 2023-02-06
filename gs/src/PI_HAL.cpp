@@ -328,7 +328,7 @@ bool PI_HAL::init_display_sdl()
 
     SDL_GL_SetSwapInterval(0);
 
-    ImGui_ImplSDL2_SetMouseEnabled(false);
+    ImGui_ImplSDL2_SetMouseEnabled(true);
 
 #endif
     return true;
@@ -441,7 +441,7 @@ bool PI_HAL::update_display()
     SDL_GL_SwapWindow(m_impl->window);
     //SDL_GL_SwapWindow(m_impl->window);
     //SDL_GL_SwapWindow(m_impl->window);
-    //glFlush();
+    glFlush();
 
     ImGui_ImplSDL2_NewFrame(m_impl->window);
 #else
