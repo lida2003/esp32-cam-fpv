@@ -476,12 +476,12 @@ int main(int argc, const char* argv[])
     rx_descriptor.coding_k = s_ground2air_config_packet.fec_codec_k;
     rx_descriptor.coding_n = s_ground2air_config_packet.fec_codec_n;
     rx_descriptor.mtu = s_ground2air_config_packet.fec_codec_mtu;
-    rx_descriptor.interfaces = {"wlx14cf920bea04"};
+    rx_descriptor.interfaces = {"wlp5s0", "wlx14cf920bea04", "wlx14cf92053cd3"};
     Comms::TX_Descriptor tx_descriptor;
     tx_descriptor.coding_k = 2;
     tx_descriptor.coding_n = 6;
     tx_descriptor.mtu = GROUND2AIR_DATA_MAX_SIZE;
-    tx_descriptor.interface = "wlx14cf920bea04";
+    tx_descriptor.interface = "wlp5s0";
     if (!s_comms.init(rx_descriptor, tx_descriptor))
         return -1;
 
