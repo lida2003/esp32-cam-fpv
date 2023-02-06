@@ -684,6 +684,7 @@ esp_err_t set_wifi_fixed_rate(WIFI_Rate value)
         WIFI_PHY_RATE_MCS4_LGI,
         WIFI_PHY_RATE_MCS4_SGI,
         WIFI_PHY_RATE_MCS5_LGI,
+
         WIFI_PHY_RATE_MCS5_SGI,
         WIFI_PHY_RATE_MCS6_LGI,
         WIFI_PHY_RATE_MCS6_SGI,
