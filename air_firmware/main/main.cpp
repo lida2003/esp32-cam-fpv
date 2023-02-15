@@ -691,9 +691,8 @@ esp_err_t set_wifi_fixed_rate(WIFI_Rate value)
         WIFI_PHY_RATE_MCS7_LGI,
         WIFI_PHY_RATE_MCS7_SGI,
     };
-
-    esp_err_t err = esp_wifi_config_80211_tx_rate(ESP_WIFI_IF, (wifi_phy_rate_t)rates[(int)value]);
     //esp_err_t err = esp_wifi_internal_set_fix_rate(ESP_WIFI_IF, true, (wifi_phy_rate_t)rates[(int)value]);
+    esp_err_t err = esp_wifi_config_80211_tx_rate(ESP_WIFI_IF, (wifi_phy_rate_t)rates[(int)value]);
     //esp_err_t err = esp_wifi_internal_set_fix_rate(ESP_WIFI_IF, true, (wifi_phy_rate_t)value);
     if (err == ESP_OK)
         s_wlan_rate = value;
@@ -1005,7 +1004,7 @@ IRAM_ATTR static void wifi_tx_proc(void *)
                     }
                     else //other errors
                     {
-                        //LOG("Wlan err: 0x%x\n", res);
+                       // LOG("Wlan err: %d\n", res);
                         s_stats.wlan_error_count++;
                         xSemaphoreTake(s_wlan_outgoing_mux, portMAX_DELAY);
                         end_reading_wlan_outgoing_packet(packet);
@@ -1161,6 +1160,7 @@ void setup_wifi()
         .filter_mask = WIFI_PROMIS_FILTER_MASK_DATA
     };
     ESP_ERROR_CHECK(esp_wifi_set_promiscuous_filter(&filter));
+    ESP_ERROR_CHECK(esp_wifi_set_promiscuous_ctrl_filter(&filter));
     ESP_ERROR_CHECK(esp_wifi_set_promiscuous_rx_cb(packet_received_cb));
     ESP_ERROR_CHECK(esp_wifi_set_promiscuous(true));
 
@@ -1436,7 +1436,7 @@ extern "C" void app_main()
     Ground2Air_Config_Packet& ground2air_config_packet = s_ground2air_config_packet;
     ground2air_config_packet.type = Ground2Air_Header::Type::Config;
     ground2air_config_packet.size = sizeof(ground2air_config_packet);
-    ground2air_config_packet.wifi_rate = WIFI_Rate::RATE_G_18M_ODFM;
+    ground2air_config_packet.wifi_rate = WIFI_Rate::RATE_G_54M_ODFM;
 
     srand(esp_timer_get_time());
 
@@ -1460,19 +1460,19 @@ extern "C" void app_main()
 
     {
         int core = tskNO_AFFINITY;
-        BaseType_t res = xTaskCreatePinnedToCore(&wifi_tx_proc, "Wifi TX", 2560, nullptr, 1, &s_wifi_tx_task, core);
+        BaseType_t res = xTaskCreatePinnedToCore(&wifi_tx_proc, "Wifi TX", 2048, nullptr, 1, &s_wifi_tx_task, core);
         if (res != pdPASS)
             LOG("Failed wifi tx task: %d\n", res);
     }
     {
         int core = tskNO_AFFINITY;
-        BaseType_t res = xTaskCreatePinnedToCore(&wifi_rx_proc, "Wifi RX", 2560, nullptr, 1, &s_wifi_rx_task, core);
+        BaseType_t res = xTaskCreatePinnedToCore(&wifi_rx_proc, "Wifi RX", 2048, nullptr, 1, &s_wifi_rx_task, core);
         if (res != pdPASS)
             LOG("Failed wifi rx task: %d\n", res);
     }
     {
         int core = tskNO_AFFINITY;
-        BaseType_t res = xTaskCreatePinnedToCore(&sd_write_proc, "SD Write", 5120 /*4096*/, nullptr, 1, &s_sd_write_task, core);
+        BaseType_t res = xTaskCreatePinnedToCore(&sd_write_proc, "SD Write", 4096, nullptr, 1, &s_sd_write_task, core);
         if (res != pdPASS)
             LOG("Failed sd write task: %d\n", res);
     }
@@ -1492,7 +1492,7 @@ extern "C" void app_main()
         if (s_uart_verbose > 0 && millis() - s_stats_last_tp >= 1000)
         {
             s_stats_last_tp = millis();
-            LOG("S: %d, R: %d, E: %d, D: %d, %%: %d | FPS: %d, D: %d | D: %d, E: %d\n",
+            LOG("WLAN S: %d, R: %d, E: %d, D: %d, %%: %d || FPS: %d, D: %d || D: %d, E: %d\n",
                 s_stats.wlan_data_sent, s_stats.wlan_data_received, s_stats.wlan_error_count, s_stats.wlan_received_packets_dropped, s_wlan_outgoing_queue.size() * 100 / s_wlan_outgoing_queue.capacity(),
                 (int)s_stats.video_frames, s_stats.video_data, s_stats.sd_data, s_stats.sd_drops);
             print_cpu_usage();

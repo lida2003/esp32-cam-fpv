@@ -104,8 +104,13 @@ bool    ImGui_ImplOpenGL3_Init(const char* glsl_version)
 {
     // Store GLSL version string so we can refer to it later in case we recreate shaders. Note: GLSL version is NOT the same as GL version. Leave this to NULL if unsure.
 #ifndef RASPBERRY_PI
+#if defined(LIDA_TEST)
     if (glsl_version == NULL)
         glsl_version = "#version 100";
+#else
+    if (glsl_version == NULL)
+        glsl_version = "#version 130";
+#endif
     IM_ASSERT((int)strlen(glsl_version) + 2 < IM_ARRAYSIZE(g_GlslVersionString));
     strcpy(g_GlslVersionString, glsl_version);
     strcat(g_GlslVersionString, "\n");
@@ -212,7 +217,7 @@ void    ImGui_ImplOpenGL3_RenderDrawData(ImDrawData* draw_data, bool rotate)
     int prev_cy = -1;
     int prev_cw = -1;
     int prev_ch = -1;
-    uint32_t prev_texId = -1;
+    intptr_t prev_texId = -1;
 
     // Draw
     ImVec2 pos = draw_data->DisplayPos;
