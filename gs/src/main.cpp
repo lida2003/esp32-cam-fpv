@@ -500,7 +500,7 @@ int main(int argc, const char* argv[])
 
     for (const auto& itf: rx_descriptor.interfaces)
     {
-        system(fmt::format("iwconfig {} channel 11", itf).c_str());
+        system(fmt::format("iwconfig {} channel 4", itf).c_str());
     }
 
     int result = run();

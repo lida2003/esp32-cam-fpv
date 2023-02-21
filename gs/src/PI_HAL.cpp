@@ -1,5 +1,6 @@
 #include "PI_HAL.h"
 #include "Log.h"
+#include "main.h"
 
 #define USE_SDL
 //#define USE_MANGA_SCREEN2
@@ -298,6 +299,21 @@ bool PI_HAL::init_display_sdl()
     LOGI("Mode {}: {}x{}", res, mode.w, mode.h);
 
     // Create an application window with the following settings:
+
+#if defined(LIDA_TEST)
+	m_impl->width = mode.w * 0.8;
+	m_impl->height = mode.h * 0.8;
+
+    m_impl->window = SDL_CreateWindow(
+        "ESP32 FPV",                  // window title
+        0,           // initial x position
+        0,           // initial y position
+        m_impl->width,                               // width, in pixels
+        m_impl->height,                               // height, in pixels
+        SDL_WINDOW_OPENGL | 
+        SDL_WINDOW_SHOWN
+    );
+#else
     m_impl->window = SDL_CreateWindow(
         "ESP32 FPV",                  // window title
         0,           // initial x position
@@ -309,6 +325,7 @@ bool PI_HAL::init_display_sdl()
         SDL_WINDOW_SHOWN | 
         SDL_WINDOW_BORDERLESS
     );
+#endif
 
     // Check that the window was successfully created
     if (m_impl->window == nullptr) 

@@ -1153,7 +1153,7 @@ void setup_wifi()
 #endif
 
     ESP_ERROR_CHECK(set_wifi_fixed_rate(s_ground2air_config_packet.wifi_rate));
-    ESP_ERROR_CHECK(esp_wifi_set_channel(11, WIFI_SECOND_CHAN_NONE));
+    ESP_ERROR_CHECK(esp_wifi_set_channel(4, WIFI_SECOND_CHAN_NONE));
 
     wifi_promiscuous_filter_t filter = 
     {
