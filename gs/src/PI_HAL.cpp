@@ -301,8 +301,8 @@ bool PI_HAL::init_display_sdl()
     // Create an application window with the following settings:
 
 #if defined(LIDA_TEST)
-	m_impl->width = mode.w * 0.8;
-	m_impl->height = mode.h * 0.8;
+        m_impl->width = 1366;
+        m_impl->height = 600;
 
     m_impl->window = SDL_CreateWindow(
         "ESP32 FPV",                  // window title

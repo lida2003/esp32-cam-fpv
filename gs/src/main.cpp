@@ -480,8 +480,9 @@ int main(int argc, const char* argv[])
     rx_descriptor.mtu = s_ground2air_config_packet.fec_codec_mtu;
 
 #if defined(LIDA_TEST)
-    rx_descriptor.interfaces = {"wlp5s0", "wlx200db032da3a", "wlx0c9160035b62"};
+    //rx_descriptor.interfaces = {"wlp5s0", "wlx200db032da3a", "wlx0c9160035b62"};
     //rx_descriptor.interfaces = {"wlp5s0", "wlx14cf920bea04", "wlx14cf92053cd3"};
+	rx_descriptor.interfaces = {"wlp5s0", "wlx14cf920bea04", "wlx14cf92053cd3", "wlx200db032da3a"};
 #else
     rx_descriptor.interfaces = {"wlan1", "wlan2"};
 #endif
